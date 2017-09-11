@@ -181,6 +181,8 @@ public class GameController : MonoBehaviour {
 
 	void InstantiateSelectedObject(GameObject ObjectToPlace, Vector3 coords){
 
+		// KUN INSTANTIATAAN OBJECTI PITÄÄ ENSIN KATSOA SEN LEVEYS JA SYVYYS JOTTA VOIDAAN ASETTAA SE OIKEIN MAPPIIN. ESIM 2x2 object on oudossa asennonossa. (puolikas)
+
 		//ekana parametrina tarvitaan objectin nimi. BuildingSizes dictista saadaan arvo leveydelle ja syvyydelle
 		//prefab objecti otetaan objectilistalta
 
@@ -190,9 +192,17 @@ public class GameController : MonoBehaviour {
 		key.x = coords.x;
 		key.y = coords.z;
 		//Debug.Log (gameObject.name);
+
+		//TARKISTA ENSIN LEVEYS JA SYVYYS JOKA MÄÄRITTÄÄ OBJECTIN SIJOITUKSEN
+		if (ObjectToPlace.GetComponent<BuildingProperties>().buildingLenghtY % 2 == 0){
+			coords.x += 0.5f;
+			coords.z += 0.5f;
+		}
+
 		if (IsThereEnoughSpace(ObjectToPlace, key)){
 		//if(!occupiedSpaces.ContainsKey(key) && InMapArea(key)){
 			Instantiate (ObjectToPlace, coords, Quaternion.identity);
+
 
 			//lisää objectin koon mukainen alue varattujen listaan
 			int plusX = 0;
