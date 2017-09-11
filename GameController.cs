@@ -7,6 +7,7 @@ public class GameController : MonoBehaviour {
 
 	public GameObject placeableObject;
 	GameObject gameController;
+	Dictionary <string, Vector2> buildingSizes;
 	//int minSpawn;
 	//int maxSpawn;
 
@@ -36,7 +37,10 @@ public class GameController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		//gameController
+		gameController = GameObject.Find ("GameController");
+		buildingSizes = gameController.GetComponent<BuildingSizes> ().Size;
+
+
 		floorMask = -1;
 		//floorMask = LayerMask.GetMask ("Map");
 	}
@@ -136,6 +140,7 @@ public class GameController : MonoBehaviour {
 
 		//key.x = coords.x;
 		//key.y = coords.z;
+
 		int sizeX;
 		int sizeY;
 
@@ -159,8 +164,14 @@ public class GameController : MonoBehaviour {
 	}
 
 
+
+
 	void InstantiateSelectedObject(GameObject gameObject, Vector3 coords){
 
+		//ekana parametrina tarvitaan objectin nimi. BuildingSizes dictista saadaan arvo leveydelle ja syvyydelle
+		//prefab objecti otetaan objectilistalta
+
+		//GameObject gameObject = prefabList.containsblaablaa
 		coords.y += 0.5f;
 		Vector2 key = new Vector2();
 		key.x = coords.x;

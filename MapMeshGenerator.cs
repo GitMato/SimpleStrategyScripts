@@ -39,10 +39,10 @@ public class MapMeshGenerator : MonoBehaviour {
 	// SHOULD take the map size from another object (mapGenerator) - PLACEHOLDER
 	void GetMapSize(){
 
-//		mapWidth = MapGenerator.mapWidth;
-//		mapHeight = MapGenerator.mapHeight;
-		mapWidth = 50;
-		mapHeight = 30;
+		GameObject mapGenerator;
+		mapGenerator = GameObject.Find ("MapGenerator");
+		mapWidth = mapGenerator.GetComponent<MapGenerator> ().mapWidth;
+		mapHeight = mapGenerator.GetComponent<MapGenerator> ().mapHeight;
 
 	}
 
