@@ -35,8 +35,8 @@ public class BuildingSizes : MonoBehaviour{
 		//Debug.Log("toimiiko?");
 		BuildingInformation = new string[,]
 		{
-			{"cube", "1", "1"},
-			{"cube2x2", "2", "2"}
+			{"Cube", "1", "1"},
+			{"Cube2x2", "2", "2"}
 		};
 
 

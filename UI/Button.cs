@@ -5,13 +5,13 @@ using UnityEngine;
 public class Button : MonoBehaviour {
 
 
-	GameObject gameController;
-	GameObject prefab;
+//	GameObject gameController;
+//	GameObject prefab;
 
 	// Use this for initialization
 	void Start () {
 		
-		gameController.GetComponent<GameController>().placeableObject = prefab;
+//		gameController.GetComponent<GameController>().placeableObject = prefab;
 
 	}
 	

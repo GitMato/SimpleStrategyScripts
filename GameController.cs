@@ -54,7 +54,7 @@ public class GameController : MonoBehaviour {
 
 		if(Input.GetButton ("Fire1") && timer >= TimeBetweenSpawns){
 
-
+			//Debug.Log ("mouse1 painettu");
 			InstantiateSelectedObject (placeableObject, mousePosRounded);
 			//GetComponent<ObjectHandler> ().SpawnObject (mousePosx, mousePosy, mousePosz);
 			//SpawnCubesOnClick ();
@@ -133,30 +133,36 @@ public class GameController : MonoBehaviour {
 
 	//------------------------FUNCTIONS FOR INSTANTIATING OBJECTS AND DESTROYING THEM ------------------
 
-	bool IsThereEnoughSpace(GameObject gameobject, Vector2 coords){
+	bool IsThereEnoughSpace(GameObject objectToCheck, Vector2 coords){
 		//check if there is any keys in the occupied spaces dictionary with the building size
 
 		Vector2 key = coords;
-
+		int origX = Mathf.RoundToInt (key.x);
+		int origY = Mathf.RoundToInt (key.y);
+		float origfloatX = coords.x;
+		float origfloatY = coords.y;
 		//key.x = coords.x;
 		//key.y = coords.z;
-		string name = gameObject.name;
+		string name = objectToCheck.name;
 
 		int sizeX = 0;
 		int sizeY = 0;
+		//Debug.Log (name);
+		//Debug.Log (buildingSizes.ContainsKey (name));
 
 		if (buildingSizes.ContainsKey(name)){
 			Vector2 size = buildingSizes [name];
 			sizeX = Mathf.RoundToInt(size.x);
 			sizeY = Mathf.RoundToInt(size.y);
+
 		}
 
 
-		for (int y = 0; y < sizeY; y++){
+		for (int y = origY; y < sizeY+origfloatY; y++){
 
-			key.x = 0;
+			key.x = origfloatX;
 
-			for (int x = 0; x < sizeX; x++){
+			for (int x = origX; x < sizeX+origfloatX; x++){
 
 				if (occupiedSpaces.ContainsKey(key)){
 					return false;
@@ -173,7 +179,7 @@ public class GameController : MonoBehaviour {
 
 
 
-	void InstantiateSelectedObject(GameObject gameObject, Vector3 coords){
+	void InstantiateSelectedObject(GameObject ObjectToPlace, Vector3 coords){
 
 		//ekana parametrina tarvitaan objectin nimi. BuildingSizes dictista saadaan arvo leveydelle ja syvyydelle
 		//prefab objecti otetaan objectilistalta
@@ -183,20 +189,20 @@ public class GameController : MonoBehaviour {
 		Vector2 key = new Vector2();
 		key.x = coords.x;
 		key.y = coords.z;
-
-		if (IsThereEnoughSpace(gameObject, key)){
+		//Debug.Log (gameObject.name);
+		if (IsThereEnoughSpace(ObjectToPlace, key)){
 		//if(!occupiedSpaces.ContainsKey(key) && InMapArea(key)){
-			Instantiate (gameObject, coords, Quaternion.identity);
+			Instantiate (ObjectToPlace, coords, Quaternion.identity);
 
 			//lisää objectin koon mukainen alue varattujen listaan
 			int plusX = 0;
 			int plusY = 0;
 
-			for (int y = 0; y < gameObject.GetComponent<BuildingProperties>().buildingLenghtY; y++){
+			for (int y = 0; y < ObjectToPlace.GetComponent<BuildingProperties>().buildingLenghtY; y++){
 				
 				plusX = 0;
 
-				for (int x = 0; x < gameObject.GetComponent<BuildingProperties>().buildingWidthX; x++){
+				for (int x = 0; x < ObjectToPlace.GetComponent<BuildingProperties>().buildingWidthX; x++){
 					
 					occupiedSpaces.Add (new Vector2 (coords.x + plusX, coords.z + plusY), 1);
 					plusX +=1;
@@ -214,7 +220,7 @@ public class GameController : MonoBehaviour {
 
 
 	//WORKS INITIALLY WITH MOUSEPOINTCOORDS
-	void DestroySelectedObject(GameObject gameObject, Vector3 coords){
+	void DestroySelectedObject(GameObject objectToDestroy, Vector3 coords){
 		
 		//int objectWidth = gameObject.GetComponent<
 
@@ -224,7 +230,7 @@ public class GameController : MonoBehaviour {
 		key.y = coords.z;
 
 		if(occupiedSpaces.ContainsKey(key)){
-			Destroy (gameObject);
+			Destroy (objectToDestroy);
 
 			occupiedSpaces.Remove (key);
 		}
