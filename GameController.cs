@@ -140,16 +140,23 @@ public class GameController : MonoBehaviour {
 
 		//key.x = coords.x;
 		//key.y = coords.z;
+		string name = gameObject.name;
 
-		int sizeX;
-		int sizeY;
+		int sizeX = 0;
+		int sizeY = 0;
+
+		if (buildingSizes.ContainsKey(name)){
+			Vector2 size = buildingSizes [name];
+			sizeX = Mathf.RoundToInt(size.x);
+			sizeY = Mathf.RoundToInt(size.y);
+		}
 
 
-		for (int y = 0; y < gameObject.GetComponent<BuildingProperties>().buildingLenghtY; y++){
+		for (int y = 0; y < sizeY; y++){
 
 			key.x = 0;
 
-			for (int x = 0; x < gameObject.GetComponent<BuildingProperties>().buildingWidthX; x++){
+			for (int x = 0; x < sizeX; x++){
 
 				if (occupiedSpaces.ContainsKey(key)){
 					return false;

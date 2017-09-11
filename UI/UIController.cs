@@ -1,35 +1,48 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
+
 
 public class UIController : MonoBehaviour {
 
 
 
-	float timer;
-
-	public GameObject button1;
+	//float timer;
+	GameObject selectedText;
+	GameObject button1;
 	public GameObject prefab1;
-	string buttonText1;
+	Button btn1;
+	//string buttonText1;
 
-	public GameObject button2;
+	GameObject button2;
 	public GameObject prefab2;
-	string buttonText2;
+	//string buttonText2;
 	// Use this for initialization
 	void Start () {
-		
+		button1 = GameObject.Find("Button_Object1");
+		button2 = GameObject.Find("Button_Object2");
 
-		//button1.GetComponent<Button>().onClick.AddListener (ChangePrefab(1));
+
+		selectedText = GameObject.Find ("SelectedText");
+
 		//button1.GetComponent<Button>().
+
+		button1.GetComponentInChildren<Text> ().text = prefab1.name;
+
+		//button1.GetComponent<Button>().onClick.AddListener (ChangePrefab(button1.name));
+
+
+
+		button2.gameObject.GetComponentInChildren<Text> ().text = prefab2.name;
 
 
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		timer += Time.deltaTime;
-		CheckIfbuttonPressed ();
+		//timer += Time.deltaTime;
+		//CheckIfbuttonPressed ();
 
 
 	}
@@ -42,7 +55,7 @@ public class UIController : MonoBehaviour {
 		
 	}
 
-	void ChangePrefab(int objectNumber){
-		
+	void ChangePrefab(string name){
+		selectedText.GetComponent<Text> ().text = name;
 	}
 }

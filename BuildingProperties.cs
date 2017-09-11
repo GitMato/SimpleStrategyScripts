@@ -5,6 +5,8 @@ using UnityEngine;
 public class BuildingProperties : MonoBehaviour {
 
 	//THIS SCRIPT SHOULD BE ADDED TO EVERY GAMEOBJECT PREFAB WHICH IS USED IN THE GAME (BUILDINGS)
+
+	//USELESS PROPERTIES ATM
 	public int buildingWidthX;
 	public int buildingLenghtY;
 

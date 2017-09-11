@@ -14,6 +14,7 @@ public class ButtonTest : MonoBehaviour {
 	void Start () {
 
 		SelectedTextObject = GameObject.Find ("UICanvas/SelectedText");
+		Debug.Log (SelectedTextObject.GetComponent<Text> ());
 		gameController = GameObject.Find ("GameController");
 		gameController.GetComponent<GameController> ().placeableObject = prefab;
 		SelectedTextObject.GetComponent<Text> ().text = prefab.name;
