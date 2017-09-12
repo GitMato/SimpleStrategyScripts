@@ -30,7 +30,7 @@ public class GameController : MonoBehaviour {
 	//end of raycasting and getting mousepos on map
 	//---
 
-	Dictionary<Vector2, int> occupiedSpaces = new Dictionary<Vector2, int> ();
+	public Dictionary<Vector2, int> occupiedSpaces = new Dictionary<Vector2, int> ();
 
 	public float TimeBetweenSpawns;
 	private float timer;
