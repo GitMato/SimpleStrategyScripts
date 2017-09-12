@@ -23,7 +23,7 @@ public class GameController : MonoBehaviour {
 	private int mousePosy;
 
 	private Vector3 mousePos;
-	private Vector3 mousePosRounded;
+	private Vector3 mousePosRounded = new Vector3();
 
 	GameObject mousePointGameObject;
 
@@ -74,6 +74,9 @@ public class GameController : MonoBehaviour {
 	void FixedUpdate () {
 		GetMouseCoords ();
 		mousePosRounded = new Vector3 (mousePosx-.5f, 0, mousePosz-.5f);
+//		mousePosRounded.x = mousePosx - 0.5f;
+//		mousePosRounded.y = 0;
+//		mousePosRounded.x = mousePosz - 0.5f;
 
 	}
 
@@ -133,7 +136,7 @@ public class GameController : MonoBehaviour {
 
 	//------------------------FUNCTIONS FOR INSTANTIATING OBJECTS AND DESTROYING THEM ------------------
 
-	bool IsThereEnoughSpace(GameObject objectToCheck, Vector2 coords){
+	bool IsThereEnoughSpace(GameObject objectToCheck, Vector2 coords, int sizeX, int sizeY){
 		//check if there is any keys in the occupied spaces dictionary with the building size
 
 		Vector2 key = coords;
@@ -143,19 +146,19 @@ public class GameController : MonoBehaviour {
 		float origfloatY = coords.y;
 		//key.x = coords.x;
 		//key.y = coords.z;
-		string name = objectToCheck.name;
+		string objectName = objectToCheck.name;
 
-		int sizeX = 0;
-		int sizeY = 0;
+		//int sizeX = 0;
+		//int sizeY = 0;
 		//Debug.Log (name);
 		//Debug.Log (buildingSizes.ContainsKey (name));
 
-		if (buildingSizes.ContainsKey(name)){
-			Vector2 size = buildingSizes [name];
-			sizeX = Mathf.RoundToInt(size.x);
-			sizeY = Mathf.RoundToInt(size.y);
-
-		}
+//		if (buildingSizes.ContainsKey(objectName)){
+//			Vector2 size = buildingSizes [objectName];
+//			sizeX = Mathf.RoundToInt(size.x);
+//			sizeY = Mathf.RoundToInt(size.y);
+//
+//		}
 
 
 		for (int y = origY; y < sizeY+origfloatY; y++){
@@ -189,43 +192,135 @@ public class GameController : MonoBehaviour {
 		//GameObject gameObject = prefabList.containsblaablaa
 		coords.y += 0.5f;
 		Vector2 key = new Vector2();
+
+
+		string objectName = ObjectToPlace.name;
+
 		key.x = coords.x;
 		key.y = coords.z;
+
+		Vector3 placingCoords = coords;
 		//Debug.Log (gameObject.name);
 
-		//TARKISTA ENSIN LEVEYS JA SYVYYS JOKA MÄÄRITTÄÄ OBJECTIN SIJOITUKSEN
-		if (ObjectToPlace.GetComponent<BuildingProperties>().buildingLenghtY % 2 == 0){
-			coords.x += 0.5f;
-			coords.z += 0.5f;
-		}
-
-		if (IsThereEnoughSpace(ObjectToPlace, key)){
-		//if(!occupiedSpaces.ContainsKey(key) && InMapArea(key)){
-			Instantiate (ObjectToPlace, coords, Quaternion.identity);
+		//TARKISTA ENSIN LEVEYS JA SYVYYS JOKA MÄÄRITTÄÄ OBJECTIN SIJOITUKSEN -- OFFSETTING
+//		if (ObjectToPlace.GetComponent<BuildingProperties>().buildingLenghtY % 2 == 0){
+//			coords.x += 0.5f;
+//			coords.z += 0.5f;
+//		}
 
 
-			//lisää objectin koon mukainen alue varattujen listaan
-			int plusX = 0;
-			int plusY = 0;
 
-			for (int y = 0; y < ObjectToPlace.GetComponent<BuildingProperties>().buildingLenghtY; y++){
-				
-				plusX = 0;
 
-				for (int x = 0; x < ObjectToPlace.GetComponent<BuildingProperties>().buildingWidthX; x++){
-					
-					occupiedSpaces.Add (new Vector2 (coords.x + plusX, coords.z + plusY), 1);
-					plusX +=1;
+		int sizeX = 0;
+		int sizeY = 0;
+		if (buildingSizes.ContainsKey (objectName)) {
+			//GetBuildingSizes ();
+			Vector2 size = buildingSizes [objectName];
+			sizeX = Mathf.RoundToInt(size.x);
+			sizeY = Mathf.RoundToInt(size.y);
+
+			//OFFSET AMOUNT
+			float offsetX = sizeX / 2 - 0.5f;
+			float offsetY = sizeY / 2 - 0.5f;
+
+			if (sizeX % 2 != 0){
+				placingCoords.x += 0.5f;
+			} 
+			if (sizeY % 2 != 0){
+				placingCoords.z += 0.5f;
+			}
+
+			placingCoords.x += offsetX;
+			placingCoords.z += offsetY;
+
+
+
+			if (IsThereEnoughSpace(ObjectToPlace, key, sizeX, sizeY)){
+				//if(!occupiedSpaces.ContainsKey(key) && InMapArea(key)){
+				Instantiate (ObjectToPlace, placingCoords, Quaternion.identity);
+
+
+				//lisää objectin koon mukainen alue varattujen listaan
+				int plusX = 0;
+				int plusY = 0;
+
+				coords.x += 0.5f;
+				coords.z += 0.5f;
+
+				//for (int y = 0; y < ObjectToPlace.GetComponent<BuildingProperties>().buildingLenghtY; y++){
+				for (int y = 0; y < size.y; y++){
+
+					plusX = 0;
+
+					for (int x = 0; x < size.x; x++){
+
+						//MENEE OIKEIN
+						Debug.Log (coords.x + plusX);
+						Debug.Log (coords.z + plusY);
+
+						//adding 0.5f to get coordinates right
+						occupiedSpaces.Add (new Vector2 (coords.x + plusX, coords.z + plusY), 1);
+						plusX +=1;
+					}
+
+					plusY +=1;
 				}
 
-				plusY +=1;
+				//occupiedSpaces.Add (new Vector2 (coords.x, coords.z), 1);
+			} else {
+				Debug.Log("Space is occupied!");
 			}
-			//occupiedSpaces.Add (new Vector2 (coords.x, coords.z), 1);
+
 		} else {
-			Debug.Log("Space is occupied!");
+			Debug.Log ("No such name in BuildingSizes");
 		}
 
+//		if (IsThereEnoughSpace(ObjectToPlace, key)){
+//		//if(!occupiedSpaces.ContainsKey(key) && InMapArea(key)){
+//			Instantiate (ObjectToPlace, coords, Quaternion.identity);
+//
+//
+//			//lisää objectin koon mukainen alue varattujen listaan
+//			int plusX = 0;
+//			int plusY = 0;
+//
+//			coords.x += 0.5f;
+//			coords.y += 0.5f;
+//
+//			for (int y = 0; y < ObjectToPlace.GetComponent<BuildingProperties>().buildingLenghtY; y++){
+//				
+//				plusX = 0;
+//
+//				for (int x = 0; x < ObjectToPlace.GetComponent<BuildingProperties>().buildingWidthX; x++){
+//
+//					Debug.Log (coords.x + plusX);
+//					Debug.Log (coords.y + plusY);
+//
+//					occupiedSpaces.Add (new Vector2 (coords.x + plusX, coords.z + plusY), 1);
+//					plusX +=1;
+//				}
+//
+//				plusY +=1;
+//			}
+//
+//			//occupiedSpaces.Add (new Vector2 (coords.x, coords.z), 1);
+//		} else {
+//			Debug.Log("Space is occupied!");
+//		}
+
 		
+	}
+
+	int[] GetBuildingSizes(string name){
+		int sizeX = 0;
+		int sizeY = 0;
+		if (buildingSizes.ContainsKey (name)) {
+			Vector2 size = buildingSizes [name];
+			sizeX = Mathf.RoundToInt(size.x);
+			sizeY = Mathf.RoundToInt(size.y);
+		}
+		int[] sizes = new int[] { sizeX, sizeY };
+		return sizes;
 	}
 
 

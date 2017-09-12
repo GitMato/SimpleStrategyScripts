@@ -36,7 +36,9 @@ public class BuildingSizes : MonoBehaviour{
 		BuildingInformation = new string[,]
 		{
 			{"Cube", "1", "1"},
-			{"Cube2x2", "2", "2"}
+			{"Cube2x2", "2", "2"},
+			{"Cube3x3", "3", "3"},
+			{"Cube4x4", "4", "4"}
 		};
 
 
