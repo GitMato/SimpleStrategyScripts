@@ -189,30 +189,18 @@ public class GameController : MonoBehaviour {
 		//ekana parametrina tarvitaan objectin nimi. BuildingSizes dictista saadaan arvo leveydelle ja syvyydelle
 		//prefab objecti otetaan objectilistalta
 
-		//GameObject gameObject = prefabList.containsblaablaa
+
 		coords.y += 0.5f;
 		Vector2 key = new Vector2();
 
-
 		string objectName = ObjectToPlace.name;
-
-		key.x = coords.x;
-		key.y = coords.z;
 
 		Vector3 placingCoords = coords;
 		//Debug.Log (gameObject.name);
 
-		//TARKISTA ENSIN LEVEYS JA SYVYYS JOKA MÄÄRITTÄÄ OBJECTIN SIJOITUKSEN -- OFFSETTING
-//		if (ObjectToPlace.GetComponent<BuildingProperties>().buildingLenghtY % 2 == 0){
-//			coords.x += 0.5f;
-//			coords.z += 0.5f;
-//		}
-
-
-
-
 		int sizeX = 0;
 		int sizeY = 0;
+
 		if (buildingSizes.ContainsKey (objectName)) {
 			//GetBuildingSizes ();
 			Vector2 size = buildingSizes [objectName];
@@ -233,7 +221,11 @@ public class GameController : MonoBehaviour {
 			placingCoords.x += offsetX;
 			placingCoords.z += offsetY;
 
-
+			//adding 0.5f to get coordinates right
+			coords.x += 0.5f;
+			coords.z += 0.5f;
+			key.x = coords.x;
+			key.y = coords.z;
 
 			if (IsThereEnoughSpace(ObjectToPlace, key, sizeX, sizeY)){
 				//if(!occupiedSpaces.ContainsKey(key) && InMapArea(key)){
@@ -244,8 +236,8 @@ public class GameController : MonoBehaviour {
 				int plusX = 0;
 				int plusY = 0;
 
-				coords.x += 0.5f;
-				coords.z += 0.5f;
+//				coords.x += 0.5f;
+//				coords.z += 0.5f;
 
 				//for (int y = 0; y < ObjectToPlace.GetComponent<BuildingProperties>().buildingLenghtY; y++){
 				for (int y = 0; y < size.y; y++){
@@ -258,7 +250,7 @@ public class GameController : MonoBehaviour {
 						Debug.Log (coords.x + plusX);
 						Debug.Log (coords.z + plusY);
 
-						//adding 0.5f to get coordinates right
+
 						occupiedSpaces.Add (new Vector2 (coords.x + plusX, coords.z + plusY), 1);
 						plusX +=1;
 					}
