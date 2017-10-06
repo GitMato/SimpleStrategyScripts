@@ -17,6 +17,7 @@ public class GameController : MonoBehaviour {
 
 	public Camera mainCamera;
 	public GameObject coordText;
+	GameObject tooltipObject;
 
 	private int mousePosx;
 	private int mousePosz;
@@ -37,6 +38,7 @@ public class GameController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		tooltipObject = GameObject.Find ("TooltipText");
 		gameController = GameObject.Find ("GameController");
 		buildingSizes = gameController.GetComponent<BuildingSizes> ().Size;
 
@@ -89,6 +91,7 @@ public class GameController : MonoBehaviour {
 
 			Ray camRay = mainCamera.ScreenPointToRay (Input.mousePosition);
 			RaycastHit floorhit;
+			//RaycastHit objectHit;
 			Debug.DrawRay (camRay.origin, camRay.direction * 100, Color.red); 
 			if (Physics.Raycast (camRay, out floorhit, camRayLength, floorMask)) {
 
@@ -99,6 +102,12 @@ public class GameController : MonoBehaviour {
 
 				mousePointGameObject = floorhit.transform.gameObject;
 
+				//If there's no gameobject pointed, update tooltip to "-"
+				if (mousePointGameObject != null) {
+					UpdateTooltipText (mousePointGameObject.name);
+				} else {
+					tooltipObject.GetComponent<Text>().text = "-";
+				}
 
 				UpdateMouseCoords (mousePos);
 				//Debug (mousePosition.x, mousePosition.z);
@@ -128,6 +137,14 @@ public class GameController : MonoBehaviour {
 		coordText.GetComponent<Text>().text = mousePositionText;
 
 
+
+	}
+
+	// OBJECT REFERENCE NOT FOUND
+	void UpdateTooltipText(string objectName){
+
+		string tooltipText = objectName;
+		//tooltipObject.GetComponent<Text>().text = objectName;
 
 	}
 
@@ -230,7 +247,7 @@ public class GameController : MonoBehaviour {
 			if (IsThereEnoughSpace(ObjectToPlace, key, sizeX, sizeY)){
 				//if(!occupiedSpaces.ContainsKey(key) && InMapArea(key)){
 				Instantiate (ObjectToPlace, placingCoords, Quaternion.identity);
-
+				Debug.Log ("Object instantiated: " + ObjectToPlace.name);
 
 				//lisää objectin koon mukainen alue varattujen listaan
 				int plusX = 0;
@@ -246,9 +263,9 @@ public class GameController : MonoBehaviour {
 
 					for (int x = 0; x < size.x; x++){
 
-						//MENEE OIKEIN
-						Debug.Log (coords.x + plusX);
-						Debug.Log (coords.z + plusY);
+						//MENEE OIKEIN - WHICH CELLS ARE BEING TAKEN WITH THIS OBJECT
+						Debug.Log ("x:" + coords.x + plusX + ", y:" + coords.z + plusY);
+						//Debug.Log (coords.z + plusY);
 
 
 						occupiedSpaces.Add (new Vector2 (coords.x + plusX, coords.z + plusY), 1);
@@ -325,6 +342,9 @@ public class GameController : MonoBehaviour {
 		Vector2 key = new Vector2();
 		key.x = coords.x;
 		key.y = coords.z;
+
+		//key.x = objectToDestroy.transform.position.x;
+		//key.y = objectToDestroy.transform.position.z;
 
 		if(occupiedSpaces.ContainsKey(key)){
 			Destroy (objectToDestroy);
