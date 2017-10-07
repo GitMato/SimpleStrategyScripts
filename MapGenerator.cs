@@ -24,8 +24,8 @@ public class MapGenerator : MonoBehaviour {
 		gameController = GameObject.Find ("GameController");
 		occupiedSpaces = gameController.GetComponent<GameController> ().occupiedSpaces;
 
-		//GeneratePerlinNoiseToList ();
-		//GenerateObjectsToMap ();
+		GeneratePerlinNoiseToList ();
+		GenerateObjectsToMap ();
 
 		//GenerateRocks ();
 
@@ -45,8 +45,8 @@ public class MapGenerator : MonoBehaviour {
 		float scale = 1;
 
 		//starts with one, cos coord system also starts with 1,1
-		for (int y = 1; y <= mapHeight; y++){
-			for (int x = 1; x <= mapWidth; x++){
+		for (int y = 0; y < mapHeight-1; y++){
+			for (int x = 0; x < mapWidth-1; x++){
 
 				//+0.1f cos perlinnoise works with the remainders so that happens now better.
 				pNoiseValue = Mathf.PerlinNoise ((x+0.1f)*frequency, (y+0.1f)*frequency);
@@ -55,7 +55,7 @@ public class MapGenerator : MonoBehaviour {
 				//joko on puu, tai ei ole
 				if (pNoiseValue >= 0.60){
 					//Debug.Log ("Generate tree: x:" + x + ", y:" + y);
-					occupiedSpaces.Add (new Vector2 (x-0.5f, y-0.5f), 1);
+					occupiedSpaces.Add (new Vector2 (x, y), 1);
 				}
 
 			}
@@ -90,8 +90,8 @@ public class MapGenerator : MonoBehaviour {
 		occupiedSpaces.Keys.CopyTo (keys, 0);
 		foreach (Vector2 key in keys){
 			
-			coords.x = key.x;
-			coords.z = key.y;
+			coords.x = key.x + 0.5f;
+			coords.z = key.y + 0.5f;
 			coords.y = 2.5f;
 			//coords.x -= 0.5f;
 			//coords.y -= 0.5f;
