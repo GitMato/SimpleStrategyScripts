@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class MapGenerator : MonoBehaviour {
 
 	// Use this for initialization
@@ -52,6 +53,7 @@ public class MapGenerator : MonoBehaviour {
 
 				//joko on puu, tai ei ole
 				if (pNoiseValue >= 0.60){
+					//Debug.Log ("Generate tree: x:" + x + ", y:" + y);
 					occupiedSpaces.Add (new Vector2 (x, y), 1);
 				}
 
@@ -68,14 +70,49 @@ public class MapGenerator : MonoBehaviour {
 	// 2: kivi
 	void GenerateObjectsToMap(){
 		Vector3 coords = new Vector3 ();
-		foreach (KeyValuePair<Vector2, int> alkio in occupiedSpaces){
-			coords.x = alkio.Key.x - 0.5f;
-			coords.z = alkio.Key.y - 0.5f;
+		GameObject tree;
+
+
+//		for (int i = 0; i < occupiedSpaces.Count; i++){
+//			alkio = occupiedSpaces [i];
+//			coords.x = alkio.Key.x - 0.5f;
+//			coords.z = alkio.Key.y - 0.5f;
+//			coords.y = 2.5f;
+//
+//			tree = Instantiate (TreePrefab, coords, Quaternion.identity);
+//			alkio.Value = tree.GetInstanceID;
+//		}
+
+		//can't modify dict if in foreach loop. That's why the new Vector2 array which consists of all the keys.
+		//NOTE: 'using system.linq' would have made this easier.
+		Vector2[] keys = new Vector2[occupiedSpaces.Keys.Count];
+		occupiedSpaces.Keys.CopyTo (keys, 0);
+		foreach (Vector2 key in keys){
+			
+			coords.x = key.x-0.5f;
+			coords.z = key.y-0.5f;
 			coords.y = 2.5f;
 			//Debug.Log (coords.x);
 			//Debug.Log ("Creating object");
-			Instantiate (TreePrefab, coords, Quaternion.identity);
+			tree = Instantiate (TreePrefab, coords, Quaternion.identity);
+
+			occupiedSpaces[key] = tree.GetInstanceID();
+			Debug.Log ("Trees: x:" + coords.x + ", y:" + coords.z + " || TreeID: " + occupiedSpaces[key]);
+			Debug.Log ("InDic: x:" + key.x + ", y:" + key.y);
+
+
 		}
+
+//		foreach (KeyValuePair<Vector2, int> alkio in occupiedSpaces.Keys.CopyTo()){
+//			coords.x = alkio.Key.x - 0.5f;
+//			coords.z = alkio.Key.y - 0.5f;
+//			coords.y = 2.5f;
+//			//Debug.Log (coords.x);
+//			//Debug.Log ("Creating object");
+//			tree = Instantiate (TreePrefab, coords, Quaternion.identity);
+//			alkio.Value = tree.GetInstanceID;
+//
+//		}
 	}
 
 	void AddObjectToOrigDict(){

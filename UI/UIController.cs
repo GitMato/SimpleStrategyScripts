@@ -17,9 +17,11 @@ public class UIController : MonoBehaviour {
 
 	List<GameObject> prefabs = new List<GameObject> ();
 	List<GameObject> buttons = new List<GameObject> ();
-	//float timer;
-	GameObject selectedText;
 
+	float timer;
+
+	GameObject selectedText;
+	GameObject tooltipText;
 	GameObject gameController;
 
 	// Use this for initialization
@@ -30,6 +32,7 @@ public class UIController : MonoBehaviour {
 
 		selectedText = GameObject.Find ("SelectedText");
 		gameController = GameObject.Find("GameController");
+		tooltipText = GameObject.Find ("TooltipText");
 
 		button1 = GameObject.Find ("Button_Object1");
 		button2 = GameObject.Find ("Button_Object2");
@@ -43,15 +46,26 @@ public class UIController : MonoBehaviour {
 		//button3.GetComponentInChildren<Text> ().text = prefab3.name;
 
 		UpdateSelectedText ();
+		//UpdateTooltipText ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		//timer += Time.deltaTime;
+		timer += Time.deltaTime;
 		//CheckIfbuttonPressed ();
+		if (timer >= 0.33f){
+			UpdateTooltipText();
+			timer = 0;
+		}
 
 
 	}
+	void UpdateTooltipText (){
+		if (gameController.GetComponent<GameController> ().mousePointGameObject != null) {
+			tooltipText.GetComponent<Text> ().text = gameController.GetComponent<GameController> ().mousePointGameObject.name;
+		}
+	}
+
 	void UpdateButtonTexts (){
 		for (int i = 0; i < buttons.Count; i++) {
 			buttons [i].GetComponentInChildren<Text> ().text = prefabs [i].name;
@@ -75,10 +89,6 @@ public class UIController : MonoBehaviour {
 		for (int i = 0; i < prefabArr.Length; i++){
 			prefabs.Add (prefabArr [i]);
 		}
-	}
-
-	void CheckIfbuttonPressed(){
-		
 	}
 
 	void ChangeLastButtonPressed(){

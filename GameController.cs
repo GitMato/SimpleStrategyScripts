@@ -26,7 +26,7 @@ public class GameController : MonoBehaviour {
 	private Vector3 mousePos;
 	private Vector3 mousePosRounded = new Vector3();
 
-	GameObject mousePointGameObject;
+	public GameObject mousePointGameObject;
 
 	//end of raycasting and getting mousepos on map
 	//---
@@ -239,14 +239,16 @@ public class GameController : MonoBehaviour {
 			placingCoords.z += offsetY;
 
 			//adding 0.5f to get coordinates right
-			coords.x += 0.5f;
-			coords.z += 0.5f;
+			//coords.x += 0.5f;
+			//coords.z += 0.5f;
 			key.x = coords.x;
 			key.y = coords.z;
 
 			if (IsThereEnoughSpace(ObjectToPlace, key, sizeX, sizeY)){
+
+				GameObject lastInstantiated;
 				//if(!occupiedSpaces.ContainsKey(key) && InMapArea(key)){
-				Instantiate (ObjectToPlace, placingCoords, Quaternion.identity);
+				lastInstantiated = Instantiate (ObjectToPlace, placingCoords, Quaternion.identity);
 				Debug.Log ("Object instantiated: " + ObjectToPlace.name);
 
 				//lisää objectin koon mukainen alue varattujen listaan
@@ -264,15 +266,18 @@ public class GameController : MonoBehaviour {
 					for (int x = 0; x < size.x; x++){
 
 						//MENEE OIKEIN - WHICH CELLS ARE BEING TAKEN WITH THIS OBJECT
-						Debug.Log ("x:" + coords.x + plusX + ", y:" + coords.z + plusY);
+						float[] calc = {coords.x + plusX + 0.5f, coords.z + plusY + 0.5f};
+						Debug.Log ("x:" + calc[0] + ", y:" + calc[1]);
 						//Debug.Log (coords.z + plusY);
 
 
-						occupiedSpaces.Add (new Vector2 (coords.x + plusX, coords.z + plusY), 1);
+						//occupiedSpaces.Add (new Vector2 (coords.x + plusX + 0.5f, coords.z + plusY + 0.5f), lastInstantiated.GetInstanceID());
+						occupiedSpaces.Add (new Vector2 (coords.x + plusX, coords.z + plusY), lastInstantiated.GetInstanceID());
 						plusX +=1;
 					}
 
 					plusY +=1;
+
 				}
 
 				//occupiedSpaces.Add (new Vector2 (coords.x, coords.z), 1);
@@ -333,24 +338,86 @@ public class GameController : MonoBehaviour {
 	}
 
 
+
 	//WORKS INITIALLY WITH MOUSEPOINTCOORDS
 	void DestroySelectedObject(GameObject objectToDestroy, Vector3 coords){
 		
 		//int objectWidth = gameObject.GetComponent<
-
+		int objectID = -1;
 		coords.y += 0.5f;
-		Vector2 key = new Vector2();
+		Vector2 key = new Vector2 ();
 		key.x = coords.x;
 		key.y = coords.z;
-
+		//key.x += 0.5f;
+		//key.y += 0.5f;
+		Debug.Log ("Destroy: x:" + key.x + ", y:" + key.y);
 		//key.x = objectToDestroy.transform.position.x;
 		//key.y = objectToDestroy.transform.position.z;
+		Vector2 size = new Vector2 ();
 
-		if(occupiedSpaces.ContainsKey(key)){
+		//layer 8 is the "Map" -layer.
+		if (objectToDestroy != null && objectToDestroy.layer != 8) {
+			
+			objectID = objectToDestroy.GetInstanceID ();
+			string objectName = objectToDestroy.name;
+			objectName = objectName.Remove(objectName.IndexOf("("));
+			size = buildingSizes [objectName];
+		} else {
+			Debug.Log("No object which to point");
+		}
+
+		//int plusX = 0;
+		//int plusY = 0;
+		bool objectFound = false;
+
+		if (occupiedSpaces.ContainsKey (key) && objectToDestroy != null && objectToDestroy.layer != 8) {
 			Destroy (objectToDestroy);
 
-			occupiedSpaces.Remove (key);
+			//size.x * size.y = total amount of entries
+			for (int i = 0; i < size.x * size.y; i++){
+				foreach (var item in occupiedSpaces) {
+					if (item.Value == objectID) {
+						occupiedSpaces.Remove (item.Key);
+						objectFound = true;
+						break;
+					} else {
+						objectFound = false;
+						//Debug.Log ("Not found in this item.");
+
+					}
+				}
+
+				if (!objectFound) {
+					Debug.Log ("No removable found.");
+				}
+
+
+			}
 		}
+//		if(occupiedSpaces.ContainsKey(key) && objectToDestroy != null){
+//			Destroy (objectToDestroy);
+//
+//			for (int y = 0; y < size.y; y++){
+//
+//				plusX = 0;
+//
+//				for (int x = 0; x < size.x; x++){
+//
+//					//MENEE OIKEIN - WHICH CELLS ARE BEING TAKEN WITH THIS OBJECT
+//					float[] calc = {key.x + plusX, key.y + plusY};
+//					Debug.Log ("Remove: x:" + calc[0] + ", y:" + calc[1]);
+//					//Debug.Log (coords.z + plusY);
+//
+//
+//					occupiedSpaces.Remove (new Vector2 (key.x + plusX, key.y + plusY));
+//					plusX +=1;
+//				}
+//
+//				plusY +=1;
+//			}
+
+			//occupiedSpaces.Remove (key);
+//		}
 	}
 
 
