@@ -24,8 +24,9 @@ public class MapGenerator : MonoBehaviour {
 		gameController = GameObject.Find ("GameController");
 		occupiedSpaces = gameController.GetComponent<GameController> ().occupiedSpaces;
 
-		GeneratePerlinNoiseToList ();
-		GenerateObjectsToMap ();
+		//GeneratePerlinNoiseToList ();
+		//GenerateObjectsToMap ();
+
 		//GenerateRocks ();
 
 		AddObjectToOrigDict ();
@@ -54,7 +55,7 @@ public class MapGenerator : MonoBehaviour {
 				//joko on puu, tai ei ole
 				if (pNoiseValue >= 0.60){
 					//Debug.Log ("Generate tree: x:" + x + ", y:" + y);
-					occupiedSpaces.Add (new Vector2 (x, y), 1);
+					occupiedSpaces.Add (new Vector2 (x-0.5f, y-0.5f), 1);
 				}
 
 			}
@@ -89,18 +90,24 @@ public class MapGenerator : MonoBehaviour {
 		occupiedSpaces.Keys.CopyTo (keys, 0);
 		foreach (Vector2 key in keys){
 			
-			coords.x = key.x-0.5f;
-			coords.z = key.y-0.5f;
+			coords.x = key.x;
+			coords.z = key.y;
 			coords.y = 2.5f;
+			//coords.x -= 0.5f;
+			//coords.y -= 0.5f;
 			//Debug.Log (coords.x);
 			//Debug.Log ("Creating object");
 			tree = Instantiate (TreePrefab, coords, Quaternion.identity);
 
 			occupiedSpaces[key] = tree.GetInstanceID();
-			Debug.Log ("Trees: x:" + coords.x + ", y:" + coords.z + " || TreeID: " + occupiedSpaces[key]);
-			Debug.Log ("InDic: x:" + key.x + ", y:" + key.y);
+			//Debug.Log ("Trees: x:" + coords.x + ", y:" + coords.z + " || TreeID: " + occupiedSpaces[key]);
+			//Debug.Log ("InDic: x:" + key.x + ", y:" + key.y);
 
 
+		}
+
+		foreach (KeyValuePair<Vector2, int> alkio in occupiedSpaces){
+			Debug.Log (alkio.Key + " : " + alkio.Value);
 		}
 
 //		foreach (KeyValuePair<Vector2, int> alkio in occupiedSpaces.Keys.CopyTo()){

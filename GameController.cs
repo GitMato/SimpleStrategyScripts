@@ -75,7 +75,7 @@ public class GameController : MonoBehaviour {
 
 	void FixedUpdate () {
 		GetMouseCoords ();
-		mousePosRounded = new Vector3 (mousePosx-.5f, 0, mousePosz-.5f);
+		mousePosRounded = new Vector3 (mousePosx, 0, mousePosz);
 //		mousePosRounded.x = mousePosx - 0.5f;
 //		mousePosRounded.y = 0;
 //		mousePosRounded.x = mousePosz - 0.5f;
@@ -102,12 +102,6 @@ public class GameController : MonoBehaviour {
 
 				mousePointGameObject = floorhit.transform.gameObject;
 
-				//If there's no gameobject pointed, update tooltip to "-"
-				if (mousePointGameObject != null) {
-					UpdateTooltipText (mousePointGameObject.name);
-				} else {
-					tooltipObject.GetComponent<Text>().text = "-";
-				}
 
 				UpdateMouseCoords (mousePos);
 				//Debug (mousePosition.x, mousePosition.z);
@@ -126,9 +120,9 @@ public class GameController : MonoBehaviour {
 //		mousePosz = Mathf.RoundToInt (mousePos.z);
 
 		//Ylempi toimi hyvin, mutta puolessa välissä tuli virhe koska pyöristys, täten uusi:
-		mousePosx = Mathf.RoundToInt (mousePos.x+0.5f);
-		mousePosy = Mathf.RoundToInt (mousePos.y+0.5f);
-		mousePosz = Mathf.RoundToInt (mousePos.z+0.5f);
+		mousePosx = Mathf.RoundToInt (mousePos.x-0.5f);
+		mousePosy = Mathf.RoundToInt (mousePos.y-0.5f);
+		mousePosz = Mathf.RoundToInt (mousePos.z-0.5f);
 
 		//Aseta osoitinteksti
 
@@ -140,13 +134,7 @@ public class GameController : MonoBehaviour {
 
 	}
 
-	// OBJECT REFERENCE NOT FOUND
-	void UpdateTooltipText(string objectName){
 
-		string tooltipText = objectName;
-		//tooltipObject.GetComponent<Text>().text = objectName;
-
-	}
 
 	//END------------------------FUNCTIONS FOR RAYCAST AND GETTING MOUSECOORDS HITTING THE MAP LAYER ENDS ------
 
@@ -157,6 +145,8 @@ public class GameController : MonoBehaviour {
 		//check if there is any keys in the occupied spaces dictionary with the building size
 
 		Vector2 key = coords;
+		//key.x += 0.5f;
+		//key.y += 0.5f;
 		int origX = Mathf.RoundToInt (key.x);
 		int origY = Mathf.RoundToInt (key.y);
 		float origfloatX = coords.x;
@@ -177,6 +167,8 @@ public class GameController : MonoBehaviour {
 //
 //		}
 
+
+		Debug.Log ("IsThereEnoughSpace: " + key);
 
 		for (int y = origY; y < sizeY+origfloatY; y++){
 
@@ -235,8 +227,8 @@ public class GameController : MonoBehaviour {
 				placingCoords.z += 0.5f;
 			}
 
-			placingCoords.x += offsetX;
-			placingCoords.z += offsetY;
+			placingCoords.x += offsetX + 0.5f;
+			placingCoords.z += offsetY + 0.5f;
 
 			//adding 0.5f to get coordinates right
 			//coords.x += 0.5f;
@@ -266,7 +258,8 @@ public class GameController : MonoBehaviour {
 					for (int x = 0; x < size.x; x++){
 
 						//MENEE OIKEIN - WHICH CELLS ARE BEING TAKEN WITH THIS OBJECT
-						float[] calc = {coords.x + plusX + 0.5f, coords.z + plusY + 0.5f};
+						//float[] calc = {coords.x + plusX + 0.5f, coords.z + plusY + 0.5f};
+						float[] calc = {coords.x + plusX, coords.z + plusY};
 						Debug.Log ("x:" + calc[0] + ", y:" + calc[1]);
 						//Debug.Log (coords.z + plusY);
 
@@ -361,7 +354,12 @@ public class GameController : MonoBehaviour {
 			objectID = objectToDestroy.GetInstanceID ();
 			string objectName = objectToDestroy.name;
 			objectName = objectName.Remove(objectName.IndexOf("("));
-			size = buildingSizes [objectName];
+			if (buildingSizes.ContainsKey (objectName)) {
+				size = buildingSizes [objectName];
+			} else {
+				Debug.Log ("Add building to buildingSizes dict");
+			}
+
 		} else {
 			Debug.Log("No object which to point");
 		}
@@ -377,6 +375,8 @@ public class GameController : MonoBehaviour {
 			for (int i = 0; i < size.x * size.y; i++){
 				foreach (var item in occupiedSpaces) {
 					if (item.Value == objectID) {
+
+
 						occupiedSpaces.Remove (item.Key);
 						objectFound = true;
 						break;
