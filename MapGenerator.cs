@@ -132,6 +132,8 @@ public class MapGenerator : MonoBehaviour {
 			scale = 1.0f;
 			coords.x = key.x + 0.5f;
 			coords.z = key.y + 0.5f;
+			//GameObject mapMeshGenObject = GameObject.Find ("Map");
+			//coords.y = mapMeshGenObject.GetComponent<MapMeshGenerator> ().mapHeightInfo [key];
 			coords.y = 0.0f;
 			//coords.x -= 0.5f;
 			//coords.y -= 0.5f;

@@ -37,6 +37,13 @@ public class CameraController : MonoBehaviour {
 			transform.Translate (new Vector3 (0.0f, 0.0f, -speed * Time.deltaTime));
 		}
 
+		if (Input.GetAxisRaw("Mouse ScrollWheel") > 0){
+			transform.Translate (new Vector3 (speed * Time.deltaTime, -speed * 3 * Time.deltaTime, speed * Time.deltaTime * 2));
+		}
+		if (Input.GetAxisRaw("Mouse ScrollWheel") < 0){
+			transform.Translate (new Vector3 (-speed * Time.deltaTime, speed * 3 * Time.deltaTime, -speed * Time.deltaTime * 2));
+		}
+
 		//		if (Input.GetKey(KeyCode.R)) {
 		//			transform.SetPositionAndRotation (new Vector3 (0.0f, 3.0f, -6.0f), Quaternion.Euler(45,0,0));
 		//		}

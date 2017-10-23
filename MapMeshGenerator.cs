@@ -18,6 +18,8 @@ public class MapMeshGenerator : MonoBehaviour {
 	MeshFilter filter;
 	MeshCollider coll;
 
+	//public Dictionary<Vector2, float> mapHeightInfo = new Dictionary<Vector2, float>();
+
 
 	void Start () {
 
@@ -71,13 +73,13 @@ public class MapMeshGenerator : MonoBehaviour {
 	void GenerateVertices(){
 
 		//jos halutaan korkeutta terrainiin
-//		float vertexHeight = 0;
-//		int vertexHeightScale = 2;
-//		int frequency = 10;
+		float vertexHeight;
+		int vertexHeightScale = 3;
+		int frequency = 3;
 
 		for (int y = 0; y < mapHeight; y++){
 			for (int x = 0; x < mapWidth; x++){
-
+				
 				//+0.5f is to get the middle of the four vertices to be in the middle of the square IS -.5f BETTER?
 				//vertices.Add (new Vector3 (x+0.5f, 0, y+0.5f));
 
@@ -85,9 +87,13 @@ public class MapMeshGenerator : MonoBehaviour {
 				vertices.Add (new Vector3 (x, 0, y));
 
 				//jos halutaan korkeutta terrainiin -- PerlinNoise käyttää moduloa ja sen takia pitää addaa jotain joka eroaa tasasta
-//				vertexHeight = Mathf.PerlinNoise ((x+0.1f) * frequency, (y+0.1f) * frequency) * vertexHeightScale;
+//				vertexHeight = Mathf.PerlinNoise ((x+0.01f) * frequency, (y+0.01f) * frequency) * vertexHeightScale;
+//				//Debug.Log ("VertexHeight = " + vertexHeight);
+//				if (vertexHeight >= 0.8f){
+//					vertexHeight = 0.5f;
+//				}
 //				vertices.Add (new Vector3 (x, vertexHeight, y));
-
+//				mapHeightInfo.Add (new Vector2 (x, y), vertexHeight);
 			}
 		}
 	}
