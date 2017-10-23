@@ -39,7 +39,8 @@ public class BuildingSizes : MonoBehaviour{
 			{"Cube2x2", "2", "2"},
 			{"Cube3x3", "3", "3"},
 			{"Cube4x4", "4", "4"},
-			{"TreePlaceHolder", "1", "1"}
+			{"SimplePineTree", "1", "1"},
+			{"SimpleRock", "1", "1"}
 		};
 
 
