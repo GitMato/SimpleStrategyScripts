@@ -1,3 +1,3 @@
 # SimpleStrategyScripts
 
-Scripts for my own little game project.
+Scripts for my own little unity game project.
